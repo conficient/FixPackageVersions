@@ -1,7 +1,50 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<h1>Fix Package Refs</h1>
 
-Welcome to your new app.
+<p>Sometimes a Visual Studio project file will format the package references in this format:</p>
+<code>
+    &lt;PackageReference Include="Ambolt.Addresses"&gt;
+    &lt;Version&gt;1.2.0.48&lt;/Version&gt;
+    &lt;/PackageReference&gt;
+</code>
+<p>This simple site will convert these to the more compact format:</p>
+<code>
+    &lt;PackageReference Include="PackageName" Version="1.2.3" /&gt;
+</code>
+<hr />
+<p>Copy the PackageReference entries from your project here to clean them up</p>
+<textarea @bind="@Input" class="form-control"></textarea>
+<button @onclick="ReEncode" class="btn btn-primary" >Fix</button>
+@if (Message != null)
+{
+    <div class="alert alert-info">
+        @Message
+    </div>
+}
+@code
+{
+    string Input;
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    string Message = null;
+
+    void ReEncode()
+    {
+        // read the XML from the input
+        var xml = Input;
+        if(string.IsNullOrWhiteSpace(xml))
+        {
+            Message = "Please enter the XML";
+            return;
+        }
+        try
+        {
+            var result = FixRefs.Fix(xml);
+            Input = result;
+        }
+        catch (Exception e)
+        {
+            Message = $"Error: {e.Message}";
+        }
+    }
+}

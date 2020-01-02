@@ -1,0 +1,2 @@
+﻿<PackageReference Include="correctform" Version="0.1.2" />
+<PackageReference Include="wrongform" Version="1.2.3" />
